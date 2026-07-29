@@ -71,16 +71,28 @@ export default function EmailView() {
           {/* Header Row */}
           <div className="flex justify-between items-start mb-8">
             <div className="flex items-start space-x-4">
-              <div className="w-10 h-10 rounded-full bg-[#10B981] flex items-center justify-center text-white font-semibold text-lg shrink-0">
-                A
-              </div>
+              {email.campaign?.user?.avatarUrl ? (
+                <img 
+                  src={email.campaign.user.avatarUrl} 
+                  alt="sender avatar" 
+                  className="w-10 h-10 rounded-full shrink-0 object-cover" 
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-[#10B981] flex items-center justify-center text-white font-semibold text-lg shrink-0">
+                  {(email.campaign?.user?.name || email.campaign?.user?.email || 'A')[0].toUpperCase()}
+                </div>
+              )}
               <div>
                 <div className="flex items-center space-x-2">
-                  <span className="font-semibold text-[#111827]">Amanda Clark</span>
-                  <span className="text-sm text-gray-500">&lt;sender@example.com&gt;</span>
+                  <span className="font-semibold text-[#111827]">
+                    {email.campaign?.user?.name || email.campaign?.user?.email?.split('@')[0]}
+                  </span>
+                  <span className="text-sm text-gray-500">
+                    &lt;{email.campaign?.user?.email}&gt;
+                  </span>
                 </div>
                 <div className="flex items-center text-xs text-gray-500 mt-0.5 cursor-pointer hover:text-gray-700">
-                  to me <ChevronDown className="w-3 h-3 ml-1" />
+                  to {email.recipientEmail} <ChevronDown className="w-3 h-3 ml-1" />
                 </div>
               </div>
             </div>
