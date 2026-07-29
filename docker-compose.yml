@@ -49,6 +49,4 @@ services:
 
 volumes:
   postgres_data:
-    name: reachinbox_postgres_data
   redis_data:
-    name: reachinbox_redis_data
