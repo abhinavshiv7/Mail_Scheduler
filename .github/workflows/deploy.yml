@@ -9,7 +9,7 @@ jobs:
   deploy:
     name: Deploy using Docker Compose
     runs-on: ubuntu-latest
-    environment: GCP_Secrets
+    environment: GCP_SECRETS
 
     steps:
       - name: Checkout Repository
