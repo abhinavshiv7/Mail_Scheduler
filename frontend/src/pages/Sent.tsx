@@ -1,12 +1,12 @@
-import { CheckCircle, XCircle, Clock, Star } from 'lucide-react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { CheckCircle, Star } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import api from '../api/client';
 
 export default function Sent() {
   const navigate = useNavigate();
   const { searchQuery, refreshTrigger } = useOutletContext<{ searchQuery: string, refreshTrigger: number }>();
-  const queryClient = useQueryClient();
+
 
   const { data: emails = [], isLoading } = useQuery({
     queryKey: ['sentEmails', refreshTrigger],
@@ -16,14 +16,6 @@ export default function Sent() {
     }
   });
 
-  const toggleStar = useMutation({
-    mutationFn: async (id: string) => {
-      await api.put(`/api/campaigns/email/${id}/star`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sentEmails'] });
-    }
-  });
 
   const filteredEmails = emails.filter((email: any) => 
     email.recipientEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
