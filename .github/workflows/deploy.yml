@@ -9,6 +9,7 @@ jobs:
   deploy:
     name: Deploy using Docker Compose
     runs-on: ubuntu-latest
+    environment: GCP_SECRETS
     steps:
       - name: SSH into VM and deploy directly
         uses: appleboy/ssh-action@v1.0.3
