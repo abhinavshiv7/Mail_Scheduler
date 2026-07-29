@@ -21,17 +21,24 @@ jobs:
             mkdir -p ~/reachinbox-app
             cd ~/reachinbox-app
             
-            # Use GITHUB_TOKEN to securely clone/pull the private repository without needing extra keys
+            # Clone or Pull
             if [ -d ".git" ]; then
-              echo "Repository exists. Pulling latest changes..."
+              echo "Pulling latest changes..."
               git pull https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main
             else
-              echo "Repository not found. Cloning freshly..."
+              echo "Cloning repository..."
               git clone https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git .
             fi
             
-            # Build and deploy the application
-            docker-compose up --build -d
+            echo "Starting Docker containers..."
+            # Try newer 'docker compose' plugin first, fallback to older 'docker-compose'
+            if command -v docker-compose &> /dev/null; then
+                docker-compose up --build -d
+            elif docker compose version &> /dev/null; then
+                docker compose up --build -d
+            else
+                echo "Neither docker-compose nor docker compose is installed!"
+                exit 1
+            fi
             
-            # Prune dangling images to save space
             docker image prune -f
