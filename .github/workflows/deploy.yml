@@ -10,30 +10,27 @@ jobs:
     name: Deploy using Docker Compose
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Create project directory and copy files to VM
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.GCP_VM_IP }}
-          username: ${{ secrets.GCP_VM_USERNAME }}
-          key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
-          source: "."
-          target: "~/reachinbox-app"
-          rm: true
-
-      - name: SSH into VM and deploy
+      - name: SSH into VM and deploy directly
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.GCP_VM_IP }}
           username: ${{ secrets.GCP_VM_USERNAME }}
           key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
           script: |
+            mkdir -p ~/reachinbox-app
             cd ~/reachinbox-app
             
-            # Rebuild and restart the containers in detached mode
+            # Use GITHUB_TOKEN to securely clone/pull the private repository without needing extra keys
+            if [ -d ".git" ]; then
+              echo "Repository exists. Pulling latest changes..."
+              git pull https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main
+            else
+              echo "Repository not found. Cloning freshly..."
+              git clone https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git .
+            fi
+            
+            # Build and deploy the application
             docker-compose up --build -d
             
-            # Prune dangling images to prevent the VM disk from filling up
+            # Prune dangling images to save space
             docker image prune -f
