@@ -5,8 +5,10 @@ import { useState } from 'react';
 export default function DashboardLayout() {
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
-
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [statusFilter, setStatusFilter] = useState('all');
 
   const isScheduled = location.pathname.includes('/scheduled') || location.pathname === '/';
   const isSent = location.pathname.includes('/sent');
@@ -125,21 +127,46 @@ export default function DashboardLayout() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <button className="p-2 text-[#6B7280] hover:bg-gray-100 rounded-lg transition-colors cursor-not-allowed opacity-50">
-              <Filter className="w-5 h-5" />
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => setShowFilterMenu(!showFilterMenu)}
+                className={`p-2 rounded-lg transition-colors ${statusFilter !== 'all' ? 'text-[#16A34A] bg-[#F0FDF4]' : 'text-[#6B7280] hover:bg-gray-100'}`}
+              >
+                <Filter className="w-5 h-5" />
+              </button>
+              
+              {showFilterMenu && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border border-[#E5E7EB] rounded-[12px] shadow-lg z-10 py-2">
+                  <div className="px-4 py-2 text-xs font-semibold text-[#9CA3AF] uppercase">Filter by Status</div>
+                  <button onClick={() => {setStatusFilter('all'); setShowFilterMenu(false)}} className="w-full text-left px-4 py-2 text-sm text-[#111827] hover:bg-gray-50 flex items-center justify-between">
+                    All {statusFilter === 'all' && <div className="w-2 h-2 rounded-full bg-[#16A34A]"></div>}
+                  </button>
+                  <button onClick={() => {setStatusFilter('sent'); setShowFilterMenu(false)}} className="w-full text-left px-4 py-2 text-sm text-[#111827] hover:bg-gray-50 flex items-center justify-between">
+                    Delivered {statusFilter === 'sent' && <div className="w-2 h-2 rounded-full bg-[#16A34A]"></div>}
+                  </button>
+                  <button onClick={() => {setStatusFilter('failed'); setShowFilterMenu(false)}} className="w-full text-left px-4 py-2 text-sm text-[#111827] hover:bg-gray-50 flex items-center justify-between">
+                    Failed {statusFilter === 'failed' && <div className="w-2 h-2 rounded-full bg-[#16A34A]"></div>}
+                  </button>
+                </div>
+              )}
+            </div>
+
             <button 
-              onClick={() => setRefreshTrigger(prev => prev + 1)}
+              onClick={() => {
+                setRefreshTrigger(prev => prev + 1);
+                setIsRefreshing(true);
+                setTimeout(() => setIsRefreshing(false), 1000);
+              }}
               className="p-2 text-[#6B7280] hover:bg-gray-100 rounded-lg transition-colors"
             >
-              <RefreshCw className="w-5 h-5" />
+              <RefreshCw className={`w-5 h-5 ${isRefreshing ? 'animate-spin text-[#16A34A]' : ''}`} />
             </button>
           </div>
         </header>
 
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto p-8">
-          <Outlet context={{ searchQuery, refreshTrigger }} />
+          <Outlet context={{ searchQuery, refreshTrigger, statusFilter }} />
         </div>
       </main>
 

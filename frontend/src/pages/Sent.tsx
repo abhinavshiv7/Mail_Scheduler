@@ -5,7 +5,7 @@ import { useEffect, useMemo } from 'react';
 import api from '../api/client';
 
 export default function Sent() {
-  const { searchQuery, refreshTrigger } = useOutletContext<{ searchQuery: string, refreshTrigger: number }>();
+  const { searchQuery, refreshTrigger, statusFilter } = useOutletContext<{ searchQuery: string, refreshTrigger: number, statusFilter: string }>();
 
   const { data: emails = [], isLoading, error, refetch } = useQuery({
     queryKey: ['sentEmails'],
@@ -20,13 +20,24 @@ export default function Sent() {
   }, [refreshTrigger, refetch]);
 
   const filteredEmails = useMemo(() => {
-    if (!searchQuery) return emails;
-    const lowerQuery = searchQuery.toLowerCase();
-    return emails.filter((e: any) => 
-      e.recipientEmail.toLowerCase().includes(lowerQuery) || 
-      e.campaign?.subject?.toLowerCase().includes(lowerQuery)
-    );
-  }, [emails, searchQuery]);
+    let result = emails;
+    
+    // Apply status filter
+    if (statusFilter !== 'all') {
+      result = result.filter((e: any) => e.status === statusFilter);
+    }
+    
+    // Apply search query
+    if (searchQuery) {
+      const lowerQuery = searchQuery.toLowerCase();
+      result = result.filter((e: any) => 
+        e.recipientEmail.toLowerCase().includes(lowerQuery) || 
+        (e.campaign?.subject && e.campaign.subject.toLowerCase().includes(lowerQuery))
+      );
+    }
+    
+    return result;
+  }, [emails, searchQuery, statusFilter]);
 
   if (isLoading) return <div className="p-8 text-center text-gray-500">Loading sent emails...</div>;
   if (error) return <div className="p-8 text-center text-red-500">Failed to load emails</div>;
