@@ -23,11 +23,11 @@ jobs:
             echo "Pulling latest changes..."
             git pull origin main
 
-            echo "Starting Docker containers..."
+            echo "Rebuilding and restarting Docker containers..."
             if command -v docker-compose &> /dev/null; then
-                docker-compose up --build -d
+                docker-compose -p reachinbox up --build -d
             elif docker compose version &> /dev/null; then
-                docker compose up --build -d
+                docker compose -p reachinbox up --build -d
             else
                 echo "Neither docker-compose nor docker compose is installed!"
                 exit 1
