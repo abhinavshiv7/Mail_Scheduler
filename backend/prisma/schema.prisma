@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  password     String?
+  avatarUrl    String?
+  etherealUser String?
+  etherealPass String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  campaigns Campaign[]
+}
+
+model Campaign {
+  id           String   @id @default(cuid())
+  userId       String
+  subject      String
+  body         String
+  delayBetween Int      @default(0) // seconds
+  hourlyLimit  Int? // emails per hour
+  status       String   @default("pending") // pending, active, completed
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scheduledEmails ScheduledEmail[]
+}
+
+model ScheduledEmail {
+  id             String    @id @default(cuid())
+  campaignId     String
+  recipientEmail String
+  scheduledTime  DateTime
+  sentTime       DateTime?
+  status         String    @default("scheduled") // scheduled, sent, failed
+  isStarred      Boolean   @default(false)
+  errorMessage   String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+}
