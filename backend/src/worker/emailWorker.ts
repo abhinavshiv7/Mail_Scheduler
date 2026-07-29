@@ -106,7 +106,7 @@ export const startWorker = () => {
 
   }, { 
     connection,
-    concurrency: 5 // Configurable
+    concurrency: parseInt(process.env.WORKER_CONCURRENCY || '5')
   });
 
   worker.on('failed', (job, err) => {
