@@ -86,6 +86,56 @@ The frontend will be available at `http://localhost:5173`.
 
 ---
 
+## 🏛️ Architecture Details
+
+The application is built using a modern decoupled architecture that separates the API logic from the heavy background task processing:
+
+1. **Frontend Layer (React/Vite)**
+   - Deployed as static assets served by an **NGINX** web server.
+   - NGINX is configured with a custom `nginx.conf` that routes all unmatched requests back to `index.html` (Single Page Application routing).
+   - Global states (like Search Query and Refresh Triggers) are managed natively via React Router's `Outlet Context` to avoid heavy external state management libraries.
+
+2. **Backend API Layer (Node.js/Express)**
+   - Acts as the gateway for the frontend. Handles Authentication, Campaign Creation, and Data Fetching.
+   - Communicates with PostgreSQL via **Prisma ORM** to ensure type-safe database interactions.
+   - Pushes scheduled email jobs into **BullMQ**.
+
+3. **Background Worker Layer (BullMQ/Redis)**
+   - A dedicated worker process inside the backend container continuously listens to the Redis queue.
+   - BullMQ natively handles the **delay mechanisms** by utilizing Redis Sorted Sets to wake up jobs precisely at their scheduled UNIX timestamps.
+   - Prevents the main Express event loop from blocking while sending emails via Nodemailer.
+
+4. **Data Layer**
+   - **PostgreSQL**: Stores persistent relational data (`User`, `Campaign`, `ScheduledEmail`).
+   - **Redis**: Stores ephemeral queue data, job statuses, and handles atomic counters for Rate Limiting.
+
+---
+
+## 🧠 Feature Implementation Highlights
+
+### 1. Precision Email Delays & Scheduling
+When a user specifies a `delayBetween` (e.g., 300 seconds), the backend dynamically calculates the exact execution time for each individual recipient based on their array index:
+```typescript
+const exactTime = new Date(startDate.getTime() + (index * delayBetween * 1000));
+```
+These precise timestamps are then handed off to BullMQ, which schedules them in Redis. The worker process never needs to arbitrarily "sleep" (which would block other campaigns), ensuring maximum throughput.
+
+### 2. Hourly Rate Limiting
+To protect sender reputation, the application enforces a strict `MAX_EMAILS_PER_HOUR`.
+- Implemented using an atomic **Redis INCR** counter keyed to the user's ID and the current hour (e.g., `rate_limit:user123:2026-07-29T10`).
+- If the counter exceeds the limit, the worker throws a `DELAYED_DUE_TO_RATE_LIMIT` error and leverages BullMQ's `moveToDelayed` function to push the job to the top of the next hour automatically.
+
+### 3. Authentication Dual-Strategy
+To bypass stringent Google OAuth policies during testing, the app employs a dual-strategy:
+- **Google OAuth 2.0**: Uses `@react-oauth/google` to exchange credentials.
+- **Local Auth**: Traditional Email and Password registration utilizing `bcryptjs` for secure hashing and `jsonwebtoken` (JWT) for stateless session management.
+
+### 4. Interactive Dashboard
+- **Real-time Filtering**: The Dashboard Layout features a global search bar. The input is passed down to the `Scheduled` and `Sent` child routes via Context, allowing in-memory filtering of emails by Recipient or Subject without spamming the backend.
+- **Star Toggle**: Users can star important emails. This triggers a TanStack React Query mutation that immediately updates the UI optimistically while syncing with the PostgreSQL database in the background.
+
+---
+
 ## 📁 Project Structure
 
 ```text
