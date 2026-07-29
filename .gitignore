@@ -6,6 +6,7 @@ frontend/.env.production
 
 # Backend
 backend/target/
+backend/dist/
 
 # IDE
 .vscode/
