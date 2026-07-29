@@ -4,7 +4,7 @@ import { connection } from '../config/redis';
 import prisma from '../config/db';
 
 export const startWorker = () => {
-  const worker = new Worker('email-queue', async (job: Job) => {
+  const worker = new Worker('email-queue', async (job: Job, token?: string) => {
     const { scheduledEmailId } = job.data;
     
     // Fetch the email job from DB
@@ -51,7 +51,7 @@ export const startWorker = () => {
       console.log(`Rate limit exceeded for user ${user.id}. Delaying job ${job.id} by ${delayMs}ms.`);
       
       // Reschedule the job to the next hour natively without dropping it
-      await job.moveToDelayed(Date.now() + delayMs, job.token!);
+      await job.moveToDelayed(Date.now() + delayMs, token!);
       
       // We throw a special error so BullMQ knows it didn't complete now, but it's safely delayed
       // Actually, moveToDelayed throws its own internal exception to stop execution in BullMQ v5+, 
