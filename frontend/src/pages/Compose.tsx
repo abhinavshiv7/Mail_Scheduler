@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { ArrowLeft, Paperclip, Clock, Send, Image, Type, AlignLeft, List, UploadCloud, X } from 'lucide-react';
+import { ArrowLeft, Paperclip, Clock, List, UploadCloud, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import Papa from 'papaparse';
