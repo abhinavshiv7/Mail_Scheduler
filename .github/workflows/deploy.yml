@@ -18,20 +18,12 @@ jobs:
           username: ${{ secrets.GCP_VM_USERNAME }}
           key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
           script: |
-            mkdir -p ~/reachinbox-app
-            cd ~/reachinbox-app
-            
-            # Clone or Pull
-            if [ -d ".git" ]; then
-              echo "Pulling latest changes..."
-              git pull https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main
-            else
-              echo "Cloning repository..."
-              git clone https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git .
-            fi
-            
+            cd ~/REACHINBOX-_AI_ASSIGNMENT
+
+            echo "Pulling latest changes..."
+            git pull origin main
+
             echo "Starting Docker containers..."
-            # Try newer 'docker compose' plugin first, fallback to older 'docker-compose'
             if command -v docker-compose &> /dev/null; then
                 docker-compose up --build -d
             elif docker compose version &> /dev/null; then
@@ -40,5 +32,6 @@ jobs:
                 echo "Neither docker-compose nor docker compose is installed!"
                 exit 1
             fi
-            
+
             docker image prune -f
+            echo "✅ Deployment complete at $(date)"
