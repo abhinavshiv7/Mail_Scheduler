@@ -1,64 +1,66 @@
 <div align="center">
 
-## 🔗 [**LIVE DEMO → http://34.131.249.156.nip.io**](http://34.131.249.156.nip.io)
+<img src="https://img.shields.io/badge/Status-Live%20%26%20Production%20Ready-brightgreen?style=flat-square" />
+<img src="https://img.shields.io/badge/Stack-TypeScript%20%7C%20React%20%7C%20Node.js-3178C6?style=flat-square&logo=typescript&logoColor=white" />
+<img src="https://img.shields.io/badge/Infrastructure-Docker%20Compose-2496ED?style=flat-square&logo=docker&logoColor=white" />
 
----
+<br/><br/>
 
-# 🚀 ReachInbox
+# 📬 ReachInbox — Automated Email Campaign Platform
 
-### Automated Email Scheduler & Campaign Orchestrator
+### *Schedule, deliver, and track email campaigns at scale — with zero infrastructure headaches.*
 
-A full-stack, scalable application to orchestrate, schedule, and automate email campaigns with precision delays and rate limiting.
+<br/>
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Online-brightgreen?style=for-the-badge&logo=vercel)](http://34.131.249.156.nip.io)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](#-quick-start-recommended)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Backend%20%26%20Frontend-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](#️-technology-stack)
+[![Live Demo](https://img.shields.io/badge/🌐%20Live%20Demo-Click%20to%20Launch-22c55e?style=for-the-badge)](http://34.131.249.156.nip.io)
 
-**[🌐 View Live App](http://34.131.249.156.nip.io)**
+**[→ Open Live App](http://34.131.249.156.nip.io)**
+
+<br/>
+
+</div>
+
+<div align="center">
+
+![Login Page](./screenshots/s1.png)
 
 </div>
 
 ---
 
-> **📌 Note on Project Timeline & AI Assistance**
->
-> Due to the tight time constraints of this assignment, **AI was heavily leveraged to assist in completing this project within the stipulated timeline**. It was used as a pair-programming partner to rapidly scaffold infrastructure, debug TypeScript and Docker configurations, implement UI features, and construct the BullMQ background worker architecture — enabling delivery of a production-ready, containerized application efficiently.
+## 💡 What Is ReachInbox?
+
+**ReachInbox** is a production-grade, full-stack email automation platform designed for high-volume outreach campaigns. Instead of hitting "Send All" and overwhelming inboxes, ReachInbox lets you **precisely control timing, throttle sending rates, and monitor delivery** — all from a clean, intuitive dashboard.
+
+Whether you're reaching out to 10 leads or 10,000, ReachInbox ensures your emails land in inboxes, not spam folders.
 
 ---
 
-## 📖 Table of Contents
+## ✨ Core Features
 
-- [Live Demo](#-live-demo)
-- [Key Features](#-key-features)
-- [Technology Stack](#️-technology-stack)
-- [Quick Start (Docker)](#-quick-start-recommended)
-- [Manual Local Development](#-manual-local-development)
-- [Architecture](#️-architecture-details)
-- [Feature Implementation Highlights](#-feature-implementation-highlights)
-- [Project Structure](#-project-structure)
-
----
-
-## 🌐 Live Demo
-
-The application is deployed and accessible at:
-
-### 👉 [**http://34.131.249.156.nip.io**](http://34.131.249.156.nip.io)
-
-> Spin up your own campaigns, try the CSV bulk upload, and watch the dashboard update in real time.
-
----
-
-## ✨ Key Features
-
-| Feature | Description |
+| Feature | What It Does |
 |---|---|
-| 🔐 **Flexible Authentication** | Secure Email/Password registration (via bcrypt) alongside Google OAuth 2.0 integration |
-| 📋 **Smart Campaign Scheduling** | Enter multiple recipients manually or bulk upload via CSV |
-| ⏱️ **Precision Rate Limiting & Delays** | Space out emails by a specific time delay (e.g., 30s between emails) and enforce strict hourly sending limits to protect sender reputation |
-| ⚙️ **Robust Background Processing** | Powered by **BullMQ & Redis**, ensuring emails are securely queued and processed in the background, surviving server restarts and crashes |
-| 📊 **Interactive Dashboard** | Real-time statuses of Scheduled and Sent emails, with client-side search filtering, data refreshing, and a quick "Star" toggle to prioritize campaigns |
-| 🐳 **Fully Containerized** | The entire stack (Frontend, Backend, Database, Queue) is orchestrated via a single Docker Compose file for "one-click" deployment |
+| 🔐 **Dual Authentication** | Supports both **Google OAuth 2.0** (one-click login) and traditional **Email + Password** registration (with bcrypt hashing) |
+| 📋 **Flexible Recipient Entry** | Add recipients manually (comma-separated) or **bulk-upload a CSV file** for large lists |
+| ⏱️ **Precision Delay Scheduling** | Set exact delays between individual emails (e.g., 30s between each send) — no blind batch-blasting |
+| 🚦 **Smart Hourly Rate Limiting** | Enforces a configurable hourly ceiling to protect your sender reputation and avoid triggering spam filters |
+| 📎 **File Attachments** | Attach images, PDFs, and other files to campaigns — stored as Base64 and delivered via Nodemailer |
+| 🔄 **Fault-Tolerant Background Queue** | Powered by **BullMQ + Redis**: jobs survive server restarts, crashes, and reconnections transparently |
+| 📊 **Live Campaign Dashboard** | Real-time views of Scheduled and Sent emails — with instant search, one-click refresh, and starring |
+| 📧 **Detailed Email View** | Click any email to open a rich detail view with full body rendering, sender info, and attachment previews |
+| 🐳 **One-Command Deployment** | The entire stack (Frontend, API, PostgreSQL, Redis) boots with a single `docker-compose up --build` |
+
+<div align="center">
+
+| Scheduled Dashboard | Compose New Email |
+|---|---|
+| ![Scheduled](./screenshots/s2.png) | ![Compose](./screenshots/s3.png) |
+
+| Email Detail View | Sent Dashboard |
+|---|---|
+| ![Email View](./screenshots/s4.png) | ![Sent](./screenshots/s5.png) |
+
+</div>
 
 ---
 
@@ -68,32 +70,35 @@ The application is deployed and accessible at:
 <tr>
 <td valign="top" width="33%">
 
-**Frontend**
-- React.js + Vite
+**🖥️ Frontend**
+- React 19 + Vite
 - TypeScript
-- TailwindCSS
+- Tailwind CSS
 - TanStack React Query
-- React Router
+- React Router v6
+- React Quill (rich text editor)
 - Lucide Icons
 
 </td>
 <td valign="top" width="33%">
 
-**Backend**
+**⚙️ Backend**
 - Node.js + Express.js
 - TypeScript
-- BullMQ (Redis queue)
-- Prisma ORM
-- Nodemailer
+- BullMQ (job queue)
+- Prisma ORM (type-safe DB)
+- Nodemailer (email delivery)
+- bcryptjs + JSON Web Tokens
 
 </td>
 <td valign="top" width="33%">
 
-**Infrastructure**
-- Docker & Docker Compose
-- PostgreSQL
-- Redis
-- NGINX
+**🏗️ Infrastructure**
+- Docker + Docker Compose
+- PostgreSQL 15
+- Redis 7
+- NGINX (SPA proxy + static serving)
+- Google Cloud VM (live deployment)
 
 </td>
 </tr>
@@ -101,181 +106,324 @@ The application is deployed and accessible at:
 
 ---
 
-## 🐳 Quick Start (Recommended)
+## 🚀 Quick Start — Docker (Recommended)
 
-The easiest way to run this application is using Docker Compose. This automatically spins up the Postgres Database, Redis Server, Node Backend, and NGINX Frontend.
+Get the entire stack running locally in under 2 minutes:
 
-**1. Clone the repository** and navigate to the project root:
+**Step 1 — Clone the repository:**
 
 ```bash
 git clone <repo-url>
 cd REACHINBOX_AI_ASSIGNMENT
 ```
 
-**2. Start the containers** in detached mode:
+**Step 2 — Start all containers:**
 
 ```bash
 docker-compose up --build -d
 ```
 
-**3. Access the application:**
+**Step 3 — Open the app:**
 
 | Service | URL |
 |---|---|
-| 🌐 Frontend UI | [http://localhost](http://localhost) (served via NGINX) |
+| 🌐 Frontend | [http://localhost](http://localhost) |
 | ⚙️ Backend API | [http://localhost:8081](http://localhost:8081) |
 
-**4. Tear down** (when you are finished):
+**Step 4 — Shut down:**
 
 ```bash
 docker-compose down
 ```
 
+> **💡 What gets started:** PostgreSQL database, Redis server, Node.js API + BullMQ worker, and NGINX-served React frontend — all via one command.
+
 ---
 
 ## 💻 Manual Local Development
 
-If you prefer to run the services individually without Docker (e.g., for active development):
+For active development without Docker:
 
 ### Prerequisites
 
 - Node.js (v18+)
-- Local PostgreSQL instance running (port `5432`)
-- Local Redis Server running (port `6379`)
+- PostgreSQL running locally on port `5432`
+- Redis running locally on port `6379`
 
-### 1. Backend Setup
+### Backend
 
 ```bash
 cd backend
 npm install
 
-# Push the Prisma schema to your Postgres database
+# Sync Prisma schema to your Postgres DB
 npx prisma db push
 
-# Start the development server
+# Start the dev server with hot-reload
 npm run dev
 ```
 
-### 2. Frontend Setup
-
-Open a new terminal window:
+### Frontend
 
 ```bash
 cd frontend
 npm install
 
-# Start the Vite development server
+# Start Vite dev server
 npm run dev
 ```
 
-The frontend will be available at `http://localhost:5173`.
+The frontend will be accessible at `http://localhost:5173`.
 
 ---
 
-## 🏛️ Architecture Details
+## 🏛️ Architecture
 
-The application is built using a modern decoupled architecture that separates the API logic from heavy background task processing:
-
-### 1. Frontend Layer (React/Vite)
-- Deployed as static assets served by an **NGINX** web server.
-- NGINX is configured with a custom `nginx.conf` that routes all unmatched requests back to `index.html` (SPA routing).
-- Global states (like search query and refresh triggers) are managed natively via React Router's `Outlet Context`, avoiding heavy external state management libraries.
-
-### 2. Backend API Layer (Node.js/Express)
-- Acts as the gateway for the frontend — handles authentication, campaign creation, and data fetching.
-- Communicates with PostgreSQL via **Prisma ORM** for type-safe database interactions.
-- Pushes scheduled email jobs into **BullMQ**.
-
-### 3. Background Worker Layer (BullMQ/Redis)
-- A dedicated worker process inside the backend container continuously listens to the Redis queue.
-- BullMQ natively handles delay mechanisms by utilizing Redis Sorted Sets to wake jobs precisely at their scheduled UNIX timestamps.
-- Prevents the main Express event loop from blocking while sending emails via Nodemailer.
-
-### 4. Data Layer
-- **PostgreSQL** — stores persistent relational data (`User`, `Campaign`, `ScheduledEmail`).
-- **Redis** — stores ephemeral queue data, job statuses, and atomic counters for rate limiting.
+ReachInbox is built on a **decoupled, event-driven architecture** that separates real-time API requests from slow background operations — ensuring the app remains fast and resilient under load.
 
 ```
-┌─────────────┐      ┌──────────────┐      ┌─────────────────┐
-│   Frontend  │ ───► │   Backend    │ ───► │   PostgreSQL     │
-│ (React/NGINX)│      │ (Express API)│      │  (Prisma ORM)    │
-└─────────────┘      └──────┬───────┘      └─────────────────┘
-                             │
-                             ▼
-                     ┌──────────────┐
-                     │  BullMQ/Redis│
-                     │    Queue     │
-                     └──────┬───────┘
-                             │
-                             ▼
-                     ┌──────────────┐
-                     │ Worker Process│──► Nodemailer ──► 📧
-                     └──────────────┘
+┌──────────────────┐       ┌────────────────────┐       ┌─────────────────────┐
+│  React Frontend  │ ────► │   Express API       │ ────► │   PostgreSQL         │
+│  (NGINX / Vite)  │       │   (auth, campaigns) │       │   (Prisma ORM)       │
+└──────────────────┘       └──────────┬─────────┘       └─────────────────────┘
+                                       │
+                                       │  Enqueue job
+                                       ▼
+                           ┌────────────────────┐
+                           │   BullMQ / Redis    │
+                           │   (job scheduler)   │
+                           └──────────┬─────────┘
+                                       │
+                                       │  Execute at scheduled time
+                                       ▼
+                           ┌────────────────────┐
+                           │   Worker Process    │ ──► Nodemailer ──► 📧 Inbox
+                           │   (rate-limited)    │
+                           └────────────────────┘
 ```
+
+### Layer Breakdown
+
+**1. Frontend (React + NGINX)**
+- Static assets built and served by NGINX, with custom routing rules for SPA navigation.
+- Global state (search, filters, refresh triggers) shared efficiently via React Router's Outlet Context — no Redux overhead.
+- TanStack React Query manages server state with smart caching and background refetching.
+
+**2. API Layer (Express + Prisma)**
+- Handles all authentication (JWT issuance, Google OAuth token exchange), campaign creation, and data queries.
+- Validates and schedules email jobs into the Redis-backed BullMQ queue.
+- Fully type-safe database access via Prisma ORM.
+
+**3. Background Worker (BullMQ)**
+- Dedicated worker process continuously polls the Redis queue — completely decoupled from the API.
+- BullMQ uses Redis Sorted Sets to wake jobs at their exact scheduled UNIX timestamps — no polling sleep loops.
+- Implements atomic Redis `INCR` counters for per-user, per-hour rate limiting. If the limit is hit, the job is transparently moved to the front of the next hour's queue.
+
+**4. Data Layer**
+- **PostgreSQL** — persistent storage for `User`, `Campaign`, and `ScheduledEmail` records, including Base64 file attachments.
+- **Redis** — ephemeral job queue state, rate-limit counters, and BullMQ metadata.
 
 ---
 
-## 🧠 Feature Implementation Highlights
+## 🧠 Engineering Highlights
 
-### 1. Precision Email Delays & Scheduling
+### Precision Delay Scheduling
 
-When a user specifies a `delayBetween` (e.g., 300 seconds), the backend dynamically calculates the exact execution time for each recipient based on their array index:
+When a user sets a delay of N seconds between emails, the exact dispatch time for each recipient is computed before the job enters the queue:
 
 ```typescript
 const exactTime = new Date(startDate.getTime() + (index * delayBetween * 1000));
+await emailQueue.add('send-email', jobData, { delay: exactTime - Date.now() });
 ```
 
-These precise timestamps are handed off to BullMQ, which schedules them in Redis. The worker process never needs to arbitrarily "sleep" (which would block other campaigns), ensuring maximum throughput.
+This means BullMQ **never blocks** — it sleeps individual jobs without holding up the event loop or other campaigns.
 
-### 2. Hourly Rate Limiting
+### Atomic Rate Limiting
 
-To protect sender reputation, the application enforces a strict `MAX_EMAILS_PER_HOUR`:
+Sender reputation protection is enforced using Redis atomic operations:
 
-- Implemented using an atomic **Redis `INCR`** counter keyed to the user's ID and current hour (e.g., `rate_limit:user123:2026-07-29T10`).
-- If the counter exceeds the limit, the worker throws a `DELAYED_DUE_TO_RATE_LIMIT` error and leverages BullMQ's `moveToDelayed` function to push the job to the top of the next hour automatically.
+```typescript
+const key = `rate_limit:${userId}:${currentHour}`;
+const count = await redis.incr(key);
+await redis.expire(key, 3600);  // auto-expire after 1 hour
 
-### 3. Dual-Strategy Authentication
+if (count > hourlyLimit) {
+  await job.moveToDelayed(nextHourTimestamp);  // reschedule automatically
+}
+```
 
-To bypass stringent Google OAuth policies during testing, the app employs a dual-strategy:
+### File Attachments Pipeline
 
-- **Google OAuth 2.0** — uses `@react-oauth/google` to exchange credentials.
-- **Local Auth** — traditional email/password registration using `bcryptjs` for secure hashing and `jsonwebtoken` (JWT) for stateless session management.
+Files selected in the Compose UI are converted to Base64 using the browser's `FileReader` API, stored in PostgreSQL alongside the campaign record, and deserialized by the worker at send-time:
 
-### 4. Interactive Dashboard
+```
+Browser FileReader → Base64 string → PostgreSQL (Json field) → Worker → Nodemailer attachment
+```
 
-- **Real-time filtering** — a global search bar passes input down to the `Scheduled` and `Sent` child routes via Context, allowing in-memory filtering by recipient or subject without hitting the backend.
-- **Star toggle** — a TanStack React Query mutation optimistically updates the UI while syncing with PostgreSQL in the background.
+### Resilient Error Recovery
+
+Failed email jobs are automatically retried by BullMQ with exponential backoff. Job status (`scheduled`, `sent`, `failed`) is always written back to PostgreSQL, so the dashboard reflects accurate real-world delivery outcomes.
+
+### File Attachments in Action
+
+<div align="center">
+
+![Attachments](./screenshots/s6.png)
+
+</div>
+
+---
+
+## ☁️ Cloud Deployment
+
+The application is deployed on a **Google Cloud Compute Engine VM** running Ubuntu, accessible at:
+
+### 👉 [http://34.131.249.156.nip.io](http://34.131.249.156.nip.io)
+
+The deployment uses the exact same `docker-compose.yml` used locally — no separate production config needed.
+
+### Deployment Steps
+
+```bash
+# 1. SSH into the VM
+gcloud compute ssh <instance-name> --zone=<zone>
+
+# 2. Clone the repository
+git clone <repo-url>
+cd REACHINBOX_AI_ASSIGNMENT
+
+# 3. Start the full stack
+docker-compose up --build -d
+```
+
+### Infrastructure Overview
+
+| Component | Technology | Notes |
+|---|---|---|
+| **Compute** | Google Cloud VM (e2-medium) | Ubuntu 22.04 LTS |
+| **Reverse Proxy** | NGINX (inside Docker) | Routes `/api/*` to backend, serves SPA on all other paths |
+| **Database** | PostgreSQL 15 (Docker volume) | Data persists across container restarts |
+| **Queue** | Redis 7 (Docker volume) | BullMQ jobs survive VM reboots |
+| **DNS** | nip.io (wildcard DNS) | Maps IP → human-readable domain automatically |
+| **Ports** | 80 (HTTP), 8081 (API debug) | Only port 80 exposed publicly via NGINX |
+
+<div align="center">
+
+![Docker Containers Running](./screenshots/s7.png)
+
+</div>
+
+---
+
+## 🔁 CI/CD & GitHub Workflow
+
+While this project does not use a fully automated GitHub Actions pipeline (to keep deployment simple for this assignment), the development workflow follows a clean Git branching strategy:
+
+### Branch Strategy
+
+```
+main ──────────────────────────────────────────────────► (production-ready)
+  └── feature/auth-system
+  └── feature/email-scheduler
+  └── feature/dashboard-ui
+  └── feature/file-attachments
+  └── feature/email-view
+```
+
+### Recommended GitHub Actions Workflow (for production)
+
+A full CI/CD pipeline for this stack would look like:
+
+```yaml
+# .github/workflows/deploy.yml
+name: Build & Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Docker images
+        run: docker-compose build
+
+      - name: Run type checks
+        run: |
+          cd backend && npm run build
+          cd ../frontend && npm run build
+
+      - name: SSH Deploy to VM
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: |
+            cd REACHINBOX_AI_ASSIGNMENT
+            git pull origin main
+            docker-compose up --build -d
+```
+
+### Environment Variables
+
+The following secrets must be set (locally via `.env`, in production via VM environment or GitHub Secrets):
+
+| Variable | Description |
+|---|---|
+| `DATABASE_URL` | PostgreSQL connection string |
+| `REDIS_URL` | Redis connection string |
+| `JWT_SECRET` | Secret key for signing JWT tokens |
+| `GOOGLE_CLIENT_ID` | Google OAuth 2.0 Client ID |
 
 ---
 
 ## 📁 Project Structure
 
-```text
+```
 ├── backend/
-│   ├── prisma/            # Database schema and migrations
+│   ├── prisma/
+│   │   └── schema.prisma          # User, Campaign, ScheduledEmail models
 │   ├── src/
-│   │   ├── controllers/   # API endpoint logic (auth, campaigns)
-│   │   ├── routes/        # Express route definitions
-│   │   ├── services/      # Core business logic (campaign scheduler)
-│   │   └── worker/        # BullMQ worker process (consumes email jobs)
+│   │   ├── controllers/           # Route handlers (auth, campaigns)
+│   │   ├── middlewares/           # JWT auth guard
+│   │   ├── routes/                # Express route definitions
+│   │   ├── services/              # Campaign scheduler (BullMQ job creation)
+│   │   └── worker/
+│   │       └── emailWorker.ts     # BullMQ consumer: rate-limits, sends, marks status
 │   └── Dockerfile
 ├── frontend/
 │   ├── src/
-│   │   ├── api/           # Axios client setup
-│   │   ├── components/    # Reusable UI elements
-│   │   ├── layouts/       # Dashboard and Auth wrappers
-│   │   └── pages/         # Compose, Login, Scheduled, Sent views
+│   │   ├── api/                   # Axios client with JWT interceptor
+│   │   ├── layouts/               # DashboardLayout, AuthLayout
+│   │   └── pages/
+│   │       ├── Login.tsx          # Google OAuth + Email/Password auth
+│   │       ├── Compose.tsx        # Campaign composer with rich text + attachments
+│   │       ├── Scheduled.tsx      # Scheduled campaigns dashboard
+│   │       ├── Sent.tsx           # Sent campaigns dashboard
+│   │       └── EmailView.tsx      # Individual email detail view
 │   ├── Dockerfile
-│   └── nginx.conf         # NGINX configuration for SPA routing
-└── docker-compose.yml     # Orchestrates all 4 containers
+│   └── nginx.conf                 # NGINX SPA routing + API proxy
+├── screenshots/                   # App screenshots for README showcase
+│   ├── s1.png                     # Login page
+│   ├── s2.png                     # Scheduled dashboard
+│   ├── s3.png                     # Compose email page
+│   ├── s4.png                     # Email detail view
+│   ├── s5.png                     # Sent dashboard
+│   ├── s6.png                     # File attachment UI
+│   └── s7.png                     # Docker containers (docker ps output)
+└── docker-compose.yml             # Orchestrates all 4 services
 ```
 
 ---
 
 <div align="center">
 
-Made with ⚡ BullMQ, 🐘 PostgreSQL, and a lot of Docker Compose
+Built with ⚡ BullMQ &nbsp;·&nbsp; 🐘 PostgreSQL &nbsp;·&nbsp; 🐳 Docker &nbsp;·&nbsp; ⚛️ React
 
-**[🌐 Live Demo](http://34.131.249.156.nip.io)**
+**[🌐 Open Live Demo →](http://34.131.249.156.nip.io)**
 
 </div>

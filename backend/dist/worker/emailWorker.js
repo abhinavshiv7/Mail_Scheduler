@@ -64,12 +64,23 @@ const startWorker = () => {
         });
         try {
             // Send the email
-            await transporter.sendMail({
+            const mailOptions = {
                 from: `"${user.name}" <${user.etherealUser}>`,
                 to: scheduledEmail.recipientEmail,
                 subject: campaign.subject,
                 html: campaign.body,
-            });
+            };
+            if (campaign.attachments && Array.isArray(campaign.attachments) && campaign.attachments.length > 0) {
+                mailOptions.attachments = campaign.attachments.map((att) => ({
+                    filename: att.filename,
+                    content: att.content.split('base64,')[1] || att.content,
+                    encoding: 'base64',
+                    contentType: att.mimeType || att.contentType
+                }));
+            }
+            const info = await transporter.sendMail(mailOptions);
+            console.log(`Email ${scheduledEmailId} sent successfully!`);
+            console.log(`Ethereal Preview URL: %s`, nodemailer_1.default.getTestMessageUrl(info));
             // Mark as sent in DB
             await db_1.default.scheduledEmail.update({
                 where: { id: scheduledEmailId },
@@ -79,11 +90,6 @@ const startWorker = () => {
                 }
             });
             console.log(`Email ${scheduledEmailId} sent successfully.`);
-            // Handle Per-Email delay if configured
-            if (campaign.delayBetween > 0) {
-                // Sleep the worker to enforce delay before it picks up the next job
-                await new Promise(resolve => setTimeout(resolve, campaign.delayBetween * 1000));
-            }
         }
         catch (error) {
             // Mark as failed
@@ -98,7 +104,7 @@ const startWorker = () => {
         }
     }, {
         connection: redis_1.connection,
-        concurrency: 5 // Configurable
+        concurrency: parseInt(process.env.WORKER_CONCURRENCY || '5')
     });
     worker.on('failed', (job, err) => {
         if (err.message !== 'DELAYED_DUE_TO_RATE_LIMIT') {

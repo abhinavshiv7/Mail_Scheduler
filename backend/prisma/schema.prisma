@@ -28,6 +28,7 @@ model Campaign {
   delayBetween Int      @default(0) // seconds
   hourlyLimit  Int? // emails per hour
   status       String   @default("pending") // pending, active, completed
+  attachments  Json?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 

@@ -5,7 +5,7 @@ import { scheduleCampaign } from '../services/scheduler';
 export const createCampaign = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.id;
-    const { subject, body, delayBetween, hourlyLimit, recipients, startDate } = req.body;
+    const { subject, body, delayBetween, hourlyLimit, recipients, startDate, attachments } = req.body;
 
     if (!subject || !body || !recipients || !Array.isArray(recipients) || recipients.length === 0) {
       return res.status(400).json({ error: 'Missing required fields or recipients' });
@@ -24,6 +24,7 @@ export const createCampaign = async (req: Request, res: Response) => {
       delayBetween: delayBetween || 0,
       hourlyLimit: hourlyLimit || 200,
       recipients,
+      attachments,
       startDate: parsedStartDate
     });
 
@@ -98,5 +99,29 @@ export const toggleStarEmail = async (req: Request, res: Response) => {
     res.json(updated);
   } catch (error) {
     res.status(500).json({ error: 'Failed to toggle star status' });
+  }
+};
+
+export const getEmail = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user.id;
+    const id = req.params.id as string;
+    
+    const email: any = await prisma.scheduledEmail.findUnique({
+      where: { id },
+      include: { 
+        campaign: {
+          include: { user: true }
+        }
+      }
+    });
+
+    if (!email || email.campaign.userId !== userId) {
+      return res.status(404).json({ error: 'Email not found' });
+    }
+
+    res.json(email);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch email' });
   }
 };

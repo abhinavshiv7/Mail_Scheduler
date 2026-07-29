@@ -8,11 +8,12 @@ interface ScheduleCampaignParams {
   delayBetween: number;
   hourlyLimit: number;
   recipients: string[];
+  attachments?: any[];
   startDate: Date;
 }
 
 export const scheduleCampaign = async (params: ScheduleCampaignParams) => {
-  const { userId, subject, body, delayBetween, hourlyLimit, recipients, startDate } = params;
+  const { userId, subject, body, delayBetween, hourlyLimit, recipients, attachments, startDate } = params;
 
   // 1. Create the Campaign in the database
   const campaign = await prisma.campaign.create({
@@ -22,6 +23,7 @@ export const scheduleCampaign = async (params: ScheduleCampaignParams) => {
       body,
       delayBetween,
       hourlyLimit,
+      attachments: attachments ? (attachments as any) : null,
       status: 'active'
     }
   });

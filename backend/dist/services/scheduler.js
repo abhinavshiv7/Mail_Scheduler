@@ -7,7 +7,7 @@ exports.scheduleCampaign = void 0;
 const db_1 = __importDefault(require("../config/db"));
 const queue_1 = require("../config/queue");
 const scheduleCampaign = async (params) => {
-    const { userId, subject, body, delayBetween, hourlyLimit, recipients, startDate } = params;
+    const { userId, subject, body, delayBetween, hourlyLimit, recipients, attachments, startDate } = params;
     // 1. Create the Campaign in the database
     const campaign = await db_1.default.campaign.create({
         data: {
@@ -16,6 +16,7 @@ const scheduleCampaign = async (params) => {
             body,
             delayBetween,
             hourlyLimit,
+            attachments: attachments ? attachments : null,
             status: 'active'
         }
     });

@@ -8,6 +8,7 @@ import Scheduled from './pages/Scheduled';
 import Sent from './pages/Sent';
 import Compose from './pages/Compose';
 import Login from './pages/Login';
+import EmailView from './pages/EmailView';
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ function App() {
             <Route path="/" element={<Navigate to="/dashboard/scheduled" replace />} />
             <Route path="/dashboard/scheduled" element={<Scheduled />} />
             <Route path="/dashboard/sent" element={<Sent />} />
+            <Route path="/dashboard/email/:id" element={<EmailView />} />
           </Route>
           
           <Route path="/compose" element={<ProtectedRoute><Compose /></ProtectedRoute>} />

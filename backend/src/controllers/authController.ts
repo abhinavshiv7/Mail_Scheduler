@@ -7,6 +7,8 @@ import prisma from '../config/db';
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-for-dev';
 
+import axios from 'axios';
+
 export const googleLogin = async (req: Request, res: Response) => {
   try {
     const { token } = req.body;
@@ -15,12 +17,21 @@ export const googleLogin = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Token is required' });
     }
 
-    const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
+    let payload;
+    try {
+      const userInfoResponse = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      payload = userInfoResponse.data;
+    } catch (err) {
+      // Fallback for ID token just in case
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+      payload = ticket.getPayload();
+    }
 
-    const payload = ticket.getPayload();
     if (!payload || !payload.email) {
       return res.status(400).json({ error: 'Invalid Google token payload' });
     }

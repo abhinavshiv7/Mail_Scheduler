@@ -71,12 +71,23 @@ export const startWorker = () => {
 
     try {
       // Send the email
-      const info = await transporter.sendMail({
+      const mailOptions: any = {
         from: `"${user.name}" <${user.etherealUser}>`,
         to: scheduledEmail.recipientEmail,
         subject: campaign.subject,
         html: campaign.body,
-      });
+      };
+
+      if ((campaign as any).attachments && Array.isArray((campaign as any).attachments) && (campaign as any).attachments.length > 0) {
+        mailOptions.attachments = (campaign as any).attachments.map((att: any) => ({
+          filename: att.filename,
+          content: att.content.split('base64,')[1] || att.content,
+          encoding: 'base64',
+          contentType: att.mimeType || att.contentType
+        }));
+      }
+
+      const info = await transporter.sendMail(mailOptions);
 
       console.log(`Email ${scheduledEmailId} sent successfully!`);
       console.log(`Ethereal Preview URL: %s`, nodemailer.getTestMessageUrl(info));

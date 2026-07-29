@@ -1,6 +1,6 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { Search, Filter, RefreshCw, PenSquare, Clock, Send, ChevronDown } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function DashboardLayout() {
   const location = useLocation();
@@ -15,6 +15,31 @@ export default function DashboardLayout() {
 
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const navigate = useNavigate();
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+    if (showProfileMenu) {
+      timeout = setTimeout(() => {
+        setShowProfileMenu(false);
+      }, 10000);
+    }
+    return () => clearTimeout(timeout);
+  }, [showProfileMenu]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+        setShowProfileMenu(false);
+      }
+    };
+    if (showProfileMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showProfileMenu]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -48,7 +73,7 @@ export default function DashboardLayout() {
         </div>
 
         {/* Profile Dropdown */}
-        <div className="relative mx-4 mt-6">
+        <div className="relative mx-4 mt-6" ref={profileMenuRef}>
           <div 
             onClick={() => setShowProfileMenu(!showProfileMenu)}
             className="p-4 bg-[#F9FAFB] rounded-[12px] border border-[#E5E7EB] flex items-center justify-between cursor-pointer hover:bg-gray-100 transition-colors"
@@ -141,9 +166,16 @@ export default function DashboardLayout() {
                   <button onClick={() => {setStatusFilter('all'); setShowFilterMenu(false)}} className="w-full text-left px-4 py-2 text-sm text-[#111827] hover:bg-gray-50 flex items-center justify-between">
                     All {statusFilter === 'all' && <div className="w-2 h-2 rounded-full bg-[#16A34A]"></div>}
                   </button>
-                  <button onClick={() => {setStatusFilter('sent'); setShowFilterMenu(false)}} className="w-full text-left px-4 py-2 text-sm text-[#111827] hover:bg-gray-50 flex items-center justify-between">
-                    Delivered {statusFilter === 'sent' && <div className="w-2 h-2 rounded-full bg-[#16A34A]"></div>}
-                  </button>
+                  {isSent && (
+                    <button onClick={() => {setStatusFilter('sent'); setShowFilterMenu(false)}} className="w-full text-left px-4 py-2 text-sm text-[#111827] hover:bg-gray-50 flex items-center justify-between">
+                      Delivered {statusFilter === 'sent' && <div className="w-2 h-2 rounded-full bg-[#16A34A]"></div>}
+                    </button>
+                  )}
+                  {isScheduled && (
+                    <button onClick={() => {setStatusFilter('scheduled'); setShowFilterMenu(false)}} className="w-full text-left px-4 py-2 text-sm text-[#111827] hover:bg-gray-50 flex items-center justify-between">
+                      Scheduled {statusFilter === 'scheduled' && <div className="w-2 h-2 rounded-full bg-[#16A34A]"></div>}
+                    </button>
+                  )}
                   <button onClick={() => {setStatusFilter('failed'); setShowFilterMenu(false)}} className="w-full text-left px-4 py-2 text-sm text-[#111827] hover:bg-gray-50 flex items-center justify-between">
                     Failed {statusFilter === 'failed' && <div className="w-2 h-2 rounded-full bg-[#16A34A]"></div>}
                   </button>
