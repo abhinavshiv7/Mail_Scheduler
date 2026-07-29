@@ -54,7 +54,7 @@ export default function Compose() {
         delayBetween: Number(delayBetween),
         hourlyLimit: Number(hourlyLimit),
         recipients: finalRecipients,
-        startDate: scheduleDate ? new Date(scheduleDate).toISOString() : new Date().toISOString(),
+        ...(scheduleDate && { startDate: new Date(scheduleDate).toISOString() }),
       });
       toast.success('Campaign scheduled successfully!');
       navigate('/dashboard/scheduled');

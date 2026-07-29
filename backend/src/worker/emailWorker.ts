@@ -71,12 +71,15 @@ export const startWorker = () => {
 
     try {
       // Send the email
-      await transporter.sendMail({
+      const info = await transporter.sendMail({
         from: `"${user.name}" <${user.etherealUser}>`,
         to: scheduledEmail.recipientEmail,
         subject: campaign.subject,
         html: campaign.body,
       });
+
+      console.log(`Email ${scheduledEmailId} sent successfully!`);
+      console.log(`Ethereal Preview URL: %s`, nodemailer.getTestMessageUrl(info));
 
       // Mark as sent in DB
       await prisma.scheduledEmail.update({

@@ -11,6 +11,12 @@ export const createCampaign = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Missing required fields or recipients' });
     }
 
+    let parsedStartDate = startDate ? new Date(startDate) : new Date();
+    // If the client's clock is behind the server, avoid setting negative delays
+    if (parsedStartDate.getTime() < Date.now()) {
+      parsedStartDate = new Date();
+    }
+
     const campaign = await scheduleCampaign({
       userId,
       subject,
@@ -18,7 +24,7 @@ export const createCampaign = async (req: Request, res: Response) => {
       delayBetween: delayBetween || 0,
       hourlyLimit: hourlyLimit || 200,
       recipients,
-      startDate: startDate ? new Date(startDate) : new Date()
+      startDate: parsedStartDate
     });
 
     res.status(201).json({ message: 'Campaign scheduled successfully', campaign });
