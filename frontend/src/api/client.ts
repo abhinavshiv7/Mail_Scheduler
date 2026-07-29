@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8081',
+  // In development, use local backend. In production (on VM), use relative path which Nginx will proxy to the backend container.
+  baseURL: import.meta.env.DEV ? 'http://localhost:8081' : '',
 });
 
 // Add a request interceptor to attach the JWT token
